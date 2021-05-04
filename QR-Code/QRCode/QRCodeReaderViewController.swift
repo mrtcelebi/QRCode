@@ -20,7 +20,6 @@ class QRCodeScannerViewController: UIViewController {
     
     private var captureSession: AVCaptureSession!
     private var previewLayer: ScannerOverlayPreviewLayer!
-    private var backgroundLayer = CALayer()
     
     override var prefersStatusBarHidden: Bool {
         return true
