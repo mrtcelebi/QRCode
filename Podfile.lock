@@ -1,0 +1,20 @@
+PODS:
+  - QRCodeReader.swift (10.1.0)
+  - TinyConstraints (4.0.1)
+
+DEPENDENCIES:
+  - QRCodeReader.swift (~> 10.1)
+  - TinyConstraints
+
+SPEC REPOS:
+  trunk:
+    - QRCodeReader.swift
+    - TinyConstraints
+
+SPEC CHECKSUMS:
+  QRCodeReader.swift: 373a389fe9a22d513c879a32a6f647c58f4ef572
+  TinyConstraints: 8dd91295e56797648c7bc335dd20e1d91ec4c192
+
+PODFILE CHECKSUM: e10e5da73b1db6312c33275d206e461b75b09e33
+
+COCOAPODS: 1.10.1
