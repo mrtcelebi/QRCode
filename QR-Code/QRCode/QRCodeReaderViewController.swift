@@ -18,6 +18,16 @@ class QRCodeScannerViewController: UIViewController {
         return button
     }()
     
+    private let chooseFromGalleryButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Choose from gallery", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .blue
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
+        return button
+    }()
+    
     private var captureSession: AVCaptureSession!
     private var previewLayer: ScannerOverlayPreviewLayer!
     
@@ -38,6 +48,8 @@ class QRCodeScannerViewController: UIViewController {
     }
     
     let qrDataType: QRDataType
+    
+    let imagePicker = UIImagePickerController()
     
     init(qrDataType: QRDataType) {
         self.qrDataType = qrDataType
@@ -81,6 +93,11 @@ class QRCodeScannerViewController: UIViewController {
         dismissButton.leadingToSuperview().constant = 25
         dismissButton.size(.init(width: 20, height: 20))
         dismissButton.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
+        
+        view.addSubview(chooseFromGalleryButton)
+        chooseFromGalleryButton.edgesToSuperview(excluding: .top, insets: UIEdgeInsets(top: 0, left: 50, bottom: 50, right: 50), usingSafeArea: true)
+        chooseFromGalleryButton.height(50)
+        chooseFromGalleryButton.addTarget(self, action: #selector(chooseFromGalleryButtonTapped), for: .touchUpInside)
     }
     
     private func scanQR() {
@@ -121,6 +138,7 @@ class QRCodeScannerViewController: UIViewController {
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
         view.bringSubviewToFront(dismissButton)
+        view.bringSubviewToFront(chooseFromGalleryButton)
         
         captureSession.startRunning()
     }
@@ -168,8 +186,15 @@ class QRCodeScannerViewController: UIViewController {
     @IBAction private func dismissButtonTapped() {
         dismiss(animated: true)
     }
+    
+    @IBAction private func chooseFromGalleryButtonTapped() {
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
 }
 
+// MARK: - AVCaptureMetadataOutputObjectsDelegate
 extension QRCodeScannerViewController: AVCaptureMetadataOutputObjectsDelegate {
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
@@ -200,5 +225,32 @@ extension QRCodeScannerViewController: AVCaptureMetadataOutputObjectsDelegate {
             }
         }
         dismiss(animated: true)
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension QRCodeScannerViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let qrcodeImage = info[.originalImage] as? UIImage {
+            if let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]) {
+                let ciImage = CIImage(image: qrcodeImage)!
+                var qrCodeLink = ""
+                
+                let features = detector.features(in: ciImage)
+                for feature in features as! [CIQRCodeFeature] {
+                    qrCodeLink += feature.messageString!
+                }
+                
+                if qrCodeLink == "" {
+                    print("Qr didnt find")
+                } else {
+                    print("message: \(qrCodeLink)")
+                }
+            }
+        } else {
+            print("Something went wrong")
+        }
+        dismiss(animated: true, completion: nil)
     }
 }

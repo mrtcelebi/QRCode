@@ -8,6 +8,7 @@
 import UIKit
 import TinyConstraints
 import AVFoundation
+import Photos
 
 class HomeViewController: UIViewController {
     
@@ -18,10 +19,18 @@ class HomeViewController: UIViewController {
     }()
     
     private let scanButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("ScanQR", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .red
+        return button
+    }()
+    
+    private let saveImageButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Save Image", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .blue
         return button
     }()
     
@@ -39,6 +48,9 @@ class HomeViewController: UIViewController {
     }
     
     private func configureContents() {
+        view.addSubview(scanTextLabel)
+        scanTextLabel.edgesToSuperview(excluding: .bottom, insets: UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0), usingSafeArea: true)
+                
         view.addSubview(imageView)
         imageView.centerInSuperview()
         imageView.size(.init(width: 300, height: 300))
@@ -47,12 +59,14 @@ class HomeViewController: UIViewController {
         view.addSubview(scanButton)
         scanButton.topToBottom(of: imageView).constant = 20
         scanButton.centerXToSuperview()
-        scanButton.size(.init(width: 100, height: 50))
+        scanButton.size(.init(width: 200, height: 50))
         scanButton.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
         
-        view.addSubview(scanTextLabel)
-        scanTextLabel.topToBottom(of: scanButton).constant = 20
-        scanTextLabel.centerXToSuperview()
+        view.addSubview(saveImageButton)
+        saveImageButton.topToBottom(of: scanButton).constant = 20
+        saveImageButton.centerXToSuperview()
+        saveImageButton.size(.init(width: 200, height: 50))
+        saveImageButton.addTarget(self, action: #selector(saveImageButtonTapped), for: .touchUpInside)
     }
 
     @IBAction private func scanButtonTapped() {
@@ -63,4 +77,41 @@ class HomeViewController: UIViewController {
         }
     }
     
+    @IBAction private func saveImageButtonTapped() {
+        screenShot()
+    }
+
+    private func screenShot() {
+        let layer = UIApplication.shared.keyWindow!.layer
+        let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale)
+        layer.render(in: UIGraphicsGetCurrentContext()!)
+        let screenshot = UIGraphicsGetImageFromCurrentImageContext()
+
+        UIGraphicsEndImageContext()
+
+        UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
+    }
+    
+//    func checkPhotoLibraryPermission() {
+//        let status = PHPhotoLibrary.authorizationStatus()
+//        switch status {
+//        case .authorized:
+//        print("authorized")
+//        case .denied, .restricted :
+//        //handle denied status
+//        case .notDetermined:
+//            // ask for permissions
+//            PHPhotoLibrary.requestAuthorization { status in
+//                switch status {
+//                case .authorized:
+//                // as above
+//                case .denied, .restricted:
+//                // as above
+//                case .notDetermined:
+//                // won't happen but still
+//                }
+//            }
+//        }
+//    }
 }
