@@ -34,6 +34,14 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    private let scanIbanNumberButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Scan Iban", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .red
+        return button
+    }()
+    
     private let scanTextLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -67,13 +75,21 @@ class HomeViewController: UIViewController {
         saveImageButton.centerXToSuperview()
         saveImageButton.size(.init(width: 200, height: 50))
         saveImageButton.addTarget(self, action: #selector(saveImageButtonTapped), for: .touchUpInside)
+        
+        view.addSubview(scanIbanNumberButton)
+        scanIbanNumberButton.topToBottom(of: saveImageButton).constant = 20
+        scanIbanNumberButton.centerXToSuperview()
+        scanIbanNumberButton.size(.init(width: 200, height: 50))
+        scanIbanNumberButton.addTarget(self, action: #selector(scanIbanNumberButtonTapped), for: .touchUpInside)
     }
 
     @IBAction private func scanButtonTapped() {
         let viewController = QRCodeScannerViewController(qrDataType: .string)
         present(viewController, animated: true, completion: nil)
         viewController.getStringData = { [weak self] string in
-            self?.scanTextLabel.text = string
+            DispatchQueue.main.async {
+                self?.scanTextLabel.text = string
+            }
         }
     }
     
@@ -91,6 +107,16 @@ class HomeViewController: UIViewController {
         UIGraphicsEndImageContext()
 
         UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
+    }
+    
+    @IBAction private func scanIbanNumberButtonTapped() {
+        let viewController = IbanNumberScannerViewController()
+        present(viewController, animated: true, completion: nil)
+        viewController.getIbanNumber = { [weak self] iban in
+            DispatchQueue.main.async {
+                self?.scanTextLabel.text = iban
+            }
+        }
     }
     
 //    func checkPhotoLibraryPermission() {
