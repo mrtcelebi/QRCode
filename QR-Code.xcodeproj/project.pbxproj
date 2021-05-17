@@ -9,12 +9,15 @@
 /* Begin PBXBuildFile section */
 		757E7C7DBF3E8C6DD1D032F5 /* Pods_QR_Code.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 345EF3AA156B64695F31455B /* Pods_QR_Code.framework */; };
 		A2335174263A84E600E6B957 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2335173263A84E600E6B957 /* AppDelegate.swift */; };
-		A2335176263A84E600E6B957 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2335175263A84E600E6B957 /* SceneDelegate.swift */; };
 		A2335178263A84E600E6B957 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2335177263A84E600E6B957 /* HomeViewController.swift */; };
-		A233517B263A84E600E6B957 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2335179263A84E600E6B957 /* Main.storyboard */; };
 		A233517D263A84E600E6B957 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A233517C263A84E600E6B957 /* Assets.xcassets */; };
 		A2335180263A84E600E6B957 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A233517E263A84E600E6B957 /* LaunchScreen.storyboard */; };
 		A2335188263AAD3700E6B957 /* QRCodeReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2335187263AAD3700E6B957 /* QRCodeReaderViewController.swift */; };
+		A243A06A264A6E7D00B69ED5 /* IbanNumberReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */; };
+		A28F64272649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */; };
+		A28F64282649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */; };
+		A28F64292649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */; };
+		A28F642A2649B95E00CC4F33 /* StringTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64262649B95E00CC4F33 /* StringTracker.swift */; };
 		A2B4A83526413EB700BBA700 /* ScannerOverlayPreviewLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B4A83426413EB700BBA700 /* ScannerOverlayPreviewLayer.swift */; };
 		A2B4A839264146BC00BBA700 /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B4A838264146BC00BBA700 /* QRCodeGenerator.swift */; };
 /* End PBXBuildFile section */
@@ -25,13 +28,16 @@
 		7F02B053D40BB43C9544F76E /* Pods-QR-Code.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QR-Code.debug.xcconfig"; path = "Target Support Files/Pods-QR-Code/Pods-QR-Code.debug.xcconfig"; sourceTree = "<group>"; };
 		A2335170263A84E600E6B957 /* QR-Code.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "QR-Code.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2335173263A84E600E6B957 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A2335175263A84E600E6B957 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A2335177263A84E600E6B957 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		A233517A263A84E600E6B957 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A233517C263A84E600E6B957 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A233517F263A84E600E6B957 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A2335181263A84E600E6B957 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2335187263AAD3700E6B957 /* QRCodeReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewController.swift; sourceTree = "<group>"; };
+		A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IbanNumberReader.swift; sourceTree = "<group>"; };
+		A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IbanNumberScannerViewController.swift; sourceTree = "<group>"; };
+		A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseIbanNumberScannerViewController.swift; sourceTree = "<group>"; };
+		A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IbanNumberScannerPreviewView.swift; sourceTree = "<group>"; };
+		A28F64262649B95E00CC4F33 /* StringTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTracker.swift; sourceTree = "<group>"; };
 		A2B4A83426413EB700BBA700 /* ScannerOverlayPreviewLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerOverlayPreviewLayer.swift; sourceTree = "<group>"; };
 		A2B4A838264146BC00BBA700 /* QRCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,16 +93,27 @@
 			isa = PBXGroup;
 			children = (
 				A2335173263A84E600E6B957 /* AppDelegate.swift */,
-				A2335175263A84E600E6B957 /* SceneDelegate.swift */,
 				A2B4A83A2641470100BBA700 /* Home */,
 				A2B4A8372641462600BBA700 /* QRCode */,
 				A2B4A836264142B700BBA700 /* AVCaptureVideoPreviewLayer */,
-				A2335179263A84E600E6B957 /* Main.storyboard */,
+				A2A5235F264420BB0044901C /* IbanNumber */,
 				A233517C263A84E600E6B957 /* Assets.xcassets */,
 				A233517E263A84E600E6B957 /* LaunchScreen.storyboard */,
 				A2335181263A84E600E6B957 /* Info.plist */,
 			);
 			path = "QR-Code";
+			sourceTree = "<group>";
+		};
+		A2A5235F264420BB0044901C /* IbanNumber */ = {
+			isa = PBXGroup;
+			children = (
+				A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */,
+				A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */,
+				A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */,
+				A28F64262649B95E00CC4F33 /* StringTracker.swift */,
+				A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */,
+			);
+			path = IbanNumber;
 			sourceTree = "<group>";
 		};
 		A2B4A836264142B700BBA700 /* AVCaptureVideoPreviewLayer */ = {
@@ -185,7 +202,6 @@
 			files = (
 				A2335180263A84E600E6B957 /* LaunchScreen.storyboard in Resources */,
 				A233517D263A84E600E6B957 /* Assets.xcassets in Resources */,
-				A233517B263A84E600E6B957 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,25 +255,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2335178263A84E600E6B957 /* HomeViewController.swift in Sources */,
+				A28F64282649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift in Sources */,
 				A2B4A839264146BC00BBA700 /* QRCodeGenerator.swift in Sources */,
 				A2B4A83526413EB700BBA700 /* ScannerOverlayPreviewLayer.swift in Sources */,
 				A2335174263A84E600E6B957 /* AppDelegate.swift in Sources */,
+				A28F64292649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift in Sources */,
+				A28F64272649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */,
 				A2335188263AAD3700E6B957 /* QRCodeReaderViewController.swift in Sources */,
-				A2335176263A84E600E6B957 /* SceneDelegate.swift in Sources */,
+				A28F642A2649B95E00CC4F33 /* StringTracker.swift in Sources */,
+				A243A06A264A6E7D00B69ED5 /* IbanNumberReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		A2335179263A84E600E6B957 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A233517A263A84E600E6B957 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		A233517E263A84E600E6B957 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -320,7 +332,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -375,7 +387,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -394,7 +406,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QBL6G4ALK6;
 				INFOPLIST_FILE = "QR-Code/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -415,7 +427,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QBL6G4ALK6;
 				INFOPLIST_FILE = "QR-Code/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
