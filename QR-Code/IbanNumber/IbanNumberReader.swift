@@ -28,7 +28,7 @@ class IbanNumberReader {
                 $0.topCandidates(1).first?.string
             })
             
-            let filtered = scannedTexts.filter({ $0.contains("TR") && $0.count > 25 })
+            let filtered = scannedTexts.filter({ $0.isValidIbanNumber() })
             ibanNumber = filtered.first ?? ""
         }
         do {

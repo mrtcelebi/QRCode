@@ -187,4 +187,28 @@ extension String {
 		}
 		return (range, result)
 	}
+    
+    // Validate IbanNumber
+    func isValidIbanNumber() -> Bool {
+        let pattern = #"""
+            (?x)                    # Verbose regex, allows comments
+            \b(?:\TR?)?             # Potential international prefix, may have
+            (\w{2})                 # Capture xx
+            [\ -./]?                # Potential separator
+            (\w{4})                 # Capture xxxx
+            [\ -./]?                # Potential separator
+            (\w{4})                 # Capture xxxx
+            [\ -./]?                # Potential separator
+            (\w{4})                 # Capture xxxx
+            [\ -./]?                # Potential separator
+            (\w{4})                 # Capture xxxx
+            [\ -./]?                # Potential separator
+            (\w{4})                 # Capture xxxx
+            [\ -./]?                # Potential separator
+            (\w{2})\b               # Capture xx
+            """#
+        
+        let regex = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
+    }
 }
