@@ -18,6 +18,13 @@ class HomeViewController: UIViewController {
         return imageView
     }()
     
+    private let stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 10
+        return stack
+    }()
+    
     private let scanButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("ScanQR", for: .normal)
@@ -42,45 +49,59 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    private let readIbanNumberFromImageButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Read Iban", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .blue
+        return button
+    }()
+    
     private let scanTextLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.textColor = .black
+        label.numberOfLines = 0
         return label
     }()
     
+    let imagePicker = UIImagePickerController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         configureContents()
     }
     
     private func configureContents() {
+        view.backgroundColor = .white
         view.addSubview(scanTextLabel)
         scanTextLabel.edgesToSuperview(excluding: .bottom, insets: UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0), usingSafeArea: true)
                 
         view.addSubview(imageView)
-        imageView.centerInSuperview()
+        imageView.topToBottom(of: scanTextLabel).constant = 50
+        imageView.centerXToSuperview()
         imageView.size(.init(width: 300, height: 300))
         imageView.image = QRCodeGenerator.shared.generateQRCode(from: "Murat Celebi")
+        imageView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        imageView.addGestureRecognizer(tapGesture)
         
-        view.addSubview(scanButton)
-        scanButton.topToBottom(of: imageView).constant = 20
-        scanButton.centerXToSuperview()
-        scanButton.size(.init(width: 200, height: 50))
+        view.addSubview(stackView)
+        stackView.topToBottom(of: imageView).constant = 50
+        stackView.edgesToSuperview(excluding: [.top, .bottom], insets: UIEdgeInsets(top: 0, left: 50, bottom: 0, right: 50))
+        stackView.addArrangedSubview(scanButton)
+        stackView.addArrangedSubview(saveImageButton)
+        stackView.addArrangedSubview(scanIbanNumberButton)
+        stackView.addArrangedSubview(readIbanNumberFromImageButton)
+        scanButton.height(40)
+        saveImageButton.height(40)
+        scanIbanNumberButton.height(40)
+        readIbanNumberFromImageButton.height(40)
+        
         scanButton.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
-        
-        view.addSubview(saveImageButton)
-        saveImageButton.topToBottom(of: scanButton).constant = 20
-        saveImageButton.centerXToSuperview()
-        saveImageButton.size(.init(width: 200, height: 50))
         saveImageButton.addTarget(self, action: #selector(saveImageButtonTapped), for: .touchUpInside)
-        
-        view.addSubview(scanIbanNumberButton)
-        scanIbanNumberButton.topToBottom(of: saveImageButton).constant = 20
-        scanIbanNumberButton.centerXToSuperview()
-        scanIbanNumberButton.size(.init(width: 200, height: 50))
         scanIbanNumberButton.addTarget(self, action: #selector(scanIbanNumberButtonTapped), for: .touchUpInside)
+        readIbanNumberFromImageButton.addTarget(self, action: #selector(readIbanNumberFromImageButtonTapped), for: .touchUpInside)
     }
 
     @IBAction private func scanButtonTapped() {
@@ -119,6 +140,18 @@ class HomeViewController: UIViewController {
         }
     }
     
+    @IBAction private func imageViewTapped() {
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.allowsEditing = true
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    @IBAction private func readIbanNumberFromImageButtonTapped() {
+        scanTextLabel.text = IbanNumberReader.shared.recognizeNumberFrom(image: imageView.image!)
+    }
+    
+    
 //    func checkPhotoLibraryPermission() {
 //        let status = PHPhotoLibrary.authorizationStatus()
 //        switch status {
@@ -140,4 +173,17 @@ class HomeViewController: UIViewController {
 //            }
 //        }
 //    }
+}
+
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let image = info[.originalImage] as? UIImage {
+            imageView.image = image
+        } else if let editedImage = info[.editedImage] as? UIImage {
+            imageView.image = editedImage
+        }
+        dismiss(animated: true, completion: nil)
+    }
 }

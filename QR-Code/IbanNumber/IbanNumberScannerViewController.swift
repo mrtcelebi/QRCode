@@ -50,7 +50,7 @@ class IbanNumberScannerViewController: BaseIbanNumberScannerViewController {
             // the full result only draw the green box.
             var numberIsSubstring = true
             
-            if let result = candidate.string.extractPhoneNumber() {
+            if let result = candidate.string.extractIbanNumber() {
                 let (range, number) = result
                 // Number may not cover full visionResult. Extract bounding box
                 // of substring.

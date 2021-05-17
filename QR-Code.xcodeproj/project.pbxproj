@@ -13,6 +13,7 @@
 		A233517D263A84E600E6B957 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A233517C263A84E600E6B957 /* Assets.xcassets */; };
 		A2335180263A84E600E6B957 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A233517E263A84E600E6B957 /* LaunchScreen.storyboard */; };
 		A2335188263AAD3700E6B957 /* QRCodeReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2335187263AAD3700E6B957 /* QRCodeReaderViewController.swift */; };
+		A243A06A264A6E7D00B69ED5 /* IbanNumberReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */; };
 		A28F64272649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */; };
 		A28F64282649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */; };
 		A28F64292649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */; };
@@ -32,6 +33,7 @@
 		A233517F263A84E600E6B957 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A2335181263A84E600E6B957 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2335187263AAD3700E6B957 /* QRCodeReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewController.swift; sourceTree = "<group>"; };
+		A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IbanNumberReader.swift; sourceTree = "<group>"; };
 		A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IbanNumberScannerViewController.swift; sourceTree = "<group>"; };
 		A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseIbanNumberScannerViewController.swift; sourceTree = "<group>"; };
 		A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IbanNumberScannerPreviewView.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */,
 				A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */,
 				A28F64262649B95E00CC4F33 /* StringTracker.swift */,
+				A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */,
 			);
 			path = IbanNumber;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				A28F64272649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */,
 				A2335188263AAD3700E6B957 /* QRCodeReaderViewController.swift in Sources */,
 				A28F642A2649B95E00CC4F33 /* StringTracker.swift in Sources */,
+				A243A06A264A6E7D00B69ED5 /* IbanNumberReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

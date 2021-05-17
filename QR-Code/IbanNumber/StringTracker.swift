@@ -118,7 +118,7 @@ extension String {
 	// Extracts the first Turkey Iban number found in the string, returning
 	// the range of the number and the number itself as a tuple.
 	// Returns nil if no number is found.
-	func extractPhoneNumber() -> (Range<String.Index>, String)? {
+	func extractIbanNumber() -> (Range<String.Index>, String)? {
 		// Do a first pass to find any substring that could be a Turkey Iban
 		// number. This will match the following common patterns and more:
 		// TRxx-xxxx-xxxx-xxxx-xxxx-xxxx-xx
