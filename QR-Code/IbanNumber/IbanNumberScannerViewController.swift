@@ -9,6 +9,7 @@ import UIKit
 import AVFoundation
 import Vision
 
+@available(iOS 13.0, *)
 class IbanNumberScannerViewController: BaseIbanNumberScannerViewController {
     var request: VNRecognizeTextRequest!
     // Temporal string tracker
@@ -19,8 +20,6 @@ class IbanNumberScannerViewController: BaseIbanNumberScannerViewController {
     typealias ColoredBoxGroup = (color: CGColor, boxes: [CGRect])
     
     override func viewDidLoad() {
-        // Set up vision request before letting ViewController set up the camera
-        // so that it exists when the first buffer is received.
         request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
         
         super.viewDidLoad()

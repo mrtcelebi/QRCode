@@ -8,6 +8,7 @@
 import UIKit
 import Vision
 
+@available(iOS 13.0, *)
 class IbanNumberReader {
     
     static let shared = IbanNumberReader()

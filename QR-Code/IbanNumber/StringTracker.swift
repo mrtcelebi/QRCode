@@ -115,26 +115,12 @@ extension Character {
 
 // MARK: - String Extension
 extension String {
-	// Extracts the first Turkey Iban number found in the string, returning
-	// the range of the number and the number itself as a tuple.
-	// Returns nil if no number is found.
-	func extractIbanNumber() -> (Range<String.Index>, String)? {
-		// Do a first pass to find any substring that could be a Turkey Iban
-		// number. This will match the following common patterns and more:
-		// TRxx-xxxx-xxxx-xxxx-xxxx-xxxx-xx
-		// TRxxxxxxxxxxxxxxxxxxxxxxxx
-		// TRxx xxxx xxxx xxxx xxxx xxxx xx
-		// xx-xxxx-xxxx-xxxx-xxxx-xxxx-xx
-		// xxxxxxxxxxxxxxxxxxxxxxxx
-		// xx xxxx xxxx xxxx xxxx xxxx xx
-		// Note that this doesn't only look for digits since some digits look
-		// very similar to letters. This is handled later.
-        let pattern = #"""
-            (?x)					# Verbose regex, allows comments
-            \b(?:\TR?)?		    	# Potential international prefix, may have -
-            (\w{2})				    # Capture xx
-            [\ -./]?				# Potential separator
-            (\w{4})					# Capture xxxx
+    
+    var pattern: String {
+            #"""
+            (?x)                    # Verbose regex, allows comments
+            \b(?:\TR?)?             # Potential international prefix, may have -
+            (\w{2})                 # Capture xx
             [\ -./]?                # Potential separator
             (\w{4})                 # Capture xxxx
             [\ -./]?                # Potential separator
@@ -143,9 +129,14 @@ extension String {
             (\w{4})                 # Capture xxxx
             [\ -./]?                # Potential separator
             (\w{4})                 # Capture xxxx
-            [\ -./]?				# Potential separator
-            (\w{2})\b				# Capture xx
+            [\ -./]?                # Potential separator
+            (\w{4})                 # Capture xxxx
+            [\ -./]?                # Potential separator
+            (\w{2})\b               # Capture xx
             """#
+    }
+    
+	func extractIbanNumber() -> (Range<String.Index>, String)? {
         
 		guard let range = self.range(of: pattern, options: .regularExpression, range: nil, locale: nil) else {
 			// No phone number found.
@@ -190,23 +181,6 @@ extension String {
     
     // Validate IbanNumber
     func isValidIbanNumber() -> Bool {
-        let pattern = #"""
-            (?x)                    # Verbose regex, allows comments
-            \b(?:\TR?)?             # Potential international prefix, may have
-            (\w{2})                 # Capture xx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{2})\b               # Capture xx
-            """#
         
         let regex = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil

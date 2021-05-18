@@ -100,7 +100,9 @@ class HomeViewController: UIViewController {
         
         scanButton.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
         saveImageButton.addTarget(self, action: #selector(saveImageButtonTapped), for: .touchUpInside)
-        scanIbanNumberButton.addTarget(self, action: #selector(scanIbanNumberButtonTapped), for: .touchUpInside)
+        if #available(iOS 13.0, *) {
+            scanIbanNumberButton.addTarget(self, action: #selector(scanIbanNumberButtonTapped), for: .touchUpInside)
+        }
         readIbanNumberFromImageButton.addTarget(self, action: #selector(readIbanNumberFromImageButtonTapped), for: .touchUpInside)
     }
 
@@ -130,6 +132,7 @@ class HomeViewController: UIViewController {
         UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
     }
     
+    @available(iOS 13.0, *)
     @IBAction private func scanIbanNumberButtonTapped() {
         let viewController = IbanNumberScannerViewController()
         present(viewController, animated: true, completion: nil)
@@ -148,7 +151,9 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction private func readIbanNumberFromImageButtonTapped() {
-        scanTextLabel.text = IbanNumberReader.shared.recognizeNumberFrom(image: imageView.image!)
+        if #available(iOS 13.0, *) {
+            scanTextLabel.text = IbanNumberReader.shared.recognizeNumberFrom(image: imageView.image!)
+        }
     }
     
     
