@@ -14,8 +14,7 @@
 		A2335180263A84E600E6B957 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A233517E263A84E600E6B957 /* LaunchScreen.storyboard */; };
 		A2335188263AAD3700E6B957 /* QRCodeReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2335187263AAD3700E6B957 /* QRCodeReaderViewController.swift */; };
 		A243A06A264A6E7D00B69ED5 /* IbanNumberReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */; };
-		A28F64272649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */; };
-		A28F64282649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */; };
+		A28F64282649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64242649B95E00CC4F33 /* IbanNumberScannerViewController.swift */; };
 		A28F64292649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */; };
 		A28F642A2649B95E00CC4F33 /* StringTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F64262649B95E00CC4F33 /* StringTracker.swift */; };
 		A2B4A83526413EB700BBA700 /* ScannerOverlayPreviewLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B4A83426413EB700BBA700 /* ScannerOverlayPreviewLayer.swift */; };
@@ -34,8 +33,7 @@
 		A2335181263A84E600E6B957 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2335187263AAD3700E6B957 /* QRCodeReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewController.swift; sourceTree = "<group>"; };
 		A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IbanNumberReader.swift; sourceTree = "<group>"; };
-		A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IbanNumberScannerViewController.swift; sourceTree = "<group>"; };
-		A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseIbanNumberScannerViewController.swift; sourceTree = "<group>"; };
+		A28F64242649B95E00CC4F33 /* IbanNumberScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IbanNumberScannerViewController.swift; sourceTree = "<group>"; };
 		A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IbanNumberScannerPreviewView.swift; sourceTree = "<group>"; };
 		A28F64262649B95E00CC4F33 /* StringTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTracker.swift; sourceTree = "<group>"; };
 		A2B4A83426413EB700BBA700 /* ScannerOverlayPreviewLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerOverlayPreviewLayer.swift; sourceTree = "<group>"; };
@@ -108,8 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				A28F64252649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift */,
-				A28F64242649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift */,
-				A28F64232649B95E00CC4F33 /* IbanNumberScannerViewController.swift */,
+				A28F64242649B95E00CC4F33 /* IbanNumberScannerViewController.swift */,
 				A28F64262649B95E00CC4F33 /* StringTracker.swift */,
 				A243A069264A6E7D00B69ED5 /* IbanNumberReader.swift */,
 			);
@@ -255,12 +252,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2335178263A84E600E6B957 /* HomeViewController.swift in Sources */,
-				A28F64282649B95E00CC4F33 /* BaseIbanNumberScannerViewController.swift in Sources */,
+				A28F64282649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */,
 				A2B4A839264146BC00BBA700 /* QRCodeGenerator.swift in Sources */,
 				A2B4A83526413EB700BBA700 /* ScannerOverlayPreviewLayer.swift in Sources */,
 				A2335174263A84E600E6B957 /* AppDelegate.swift in Sources */,
 				A28F64292649B95E00CC4F33 /* IbanNumberScannerPreviewView.swift in Sources */,
-				A28F64272649B95E00CC4F33 /* IbanNumberScannerViewController.swift in Sources */,
 				A2335188263AAD3700E6B957 /* QRCodeReaderViewController.swift in Sources */,
 				A28F642A2649B95E00CC4F33 /* StringTracker.swift in Sources */,
 				A243A06A264A6E7D00B69ED5 /* IbanNumberReader.swift in Sources */,

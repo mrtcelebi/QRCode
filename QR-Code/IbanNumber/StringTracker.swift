@@ -12,8 +12,6 @@ class StringTracker {
 
     typealias StringObservation = (lastSeen: Int64, count: Int64)
     
-    // Dictionary of seen strings. Used to get stable recognition before
-    // displaying anything.
     var seenStrings = [String: StringObservation]()
     var bestCount = Int64(0)
     var bestString = ""
@@ -71,15 +69,7 @@ class StringTracker {
 
 // MARK: - Character Extension
 extension Character {
-	// Given a list of allowed characters, try to convert self to those in list
-	// if not already in it. This handles some common misclassifications for
-	// characters that are visually similar and can only be correctly recognized
-	// with more context and/or domain knowledge. Some examples (should be read
-	// in Menlo or some other font that has different symbols for all characters):
-	// 1 and l are the same character in Times New Roman
-	// I and l are the same character in Helvetica
-	// 0 and O are extremely similar in many fonts
-	// oO, wW, cC, sS, pP and others only differ by size in many fonts
+    
 	func getSimilarCharacterIfNotIn(allowedChars: String) -> Character {
 		let conversionTable = [
 			"s": "S",
@@ -145,7 +135,7 @@ extension String {
 		
 		// Potential number found. Strip out punctuation, whitespace and country
 		// prefix.
-		var phoneNumberDigits = ""
+		var ibanNumberDigits = ""
 		let substring = String(self[range])
 		let nsrange = NSRange(substring.startIndex..., in: substring)
 		do {
@@ -155,7 +145,7 @@ extension String {
 				for rangeInd in 1 ..< match.numberOfRanges {
 					let range = match.range(at: rangeInd)
 					let matchString = (substring as NSString).substring(with: range)
-					phoneNumberDigits += matchString as String
+					ibanNumberDigits += matchString as String
 				}
 			}
 		} catch {
@@ -163,13 +153,13 @@ extension String {
 		}
 		
 		// Must be exactly 24 digits.
-		guard phoneNumberDigits.count == 24 else {
+		guard ibanNumberDigits.count == 24 else {
 			return nil
 		}
 		
 		var result = ""
 		let allowedChars = "0123456789"
-		for var char in phoneNumberDigits {
+		for var char in ibanNumberDigits {
 			char = char.getSimilarCharacterIfNotIn(allowedChars: allowedChars)
 			guard allowedChars.contains(char) else {
 				return nil
