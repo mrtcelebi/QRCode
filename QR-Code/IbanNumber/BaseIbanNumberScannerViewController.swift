@@ -70,23 +70,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
         cutoutView.layer.mask = maskLayer
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        
-        let deviceOrientation = UIDevice.current.orientation
-        if deviceOrientation.isPortrait || deviceOrientation.isLandscape {
-            currentOrientation = deviceOrientation
-        }
-        
-        if let videoPreviewLayerConnection = previewView.videoPreviewLayer.connection {
-            if let newVideoOrientation = AVCaptureVideoOrientation(deviceOrientation: deviceOrientation) {
-                videoPreviewLayerConnection.videoOrientation = newVideoOrientation
-            }
-        }
-        
-        calculateRegionOfInterest()
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateCutout()
@@ -99,25 +82,25 @@ class BaseIbanNumberScannerViewController: UIViewController {
         let desiredWidthRatio = 0.6
         let maxPortraitWidth = 0.8
         
-        let size: CGSize
-        if currentOrientation.isPortrait || currentOrientation == .unknown {
-            size = CGSize(width: min(desiredWidthRatio * bufferAspectRatio, maxPortraitWidth), height: desiredHeightRatio / bufferAspectRatio)
-        } else {
-            size = CGSize(width: desiredWidthRatio, height: desiredHeightRatio)
-        }
+        let size = CGSize(width: min(desiredWidthRatio * bufferAspectRatio, maxPortraitWidth), height: desiredHeightRatio / bufferAspectRatio)
         
         regionOfInterest.origin = CGPoint(x: (1 - size.width) / 2, y: (1 - size.height) / 2)
         regionOfInterest.size = size
-        
-        setupOrientationAndTransform()
-        
+                
         DispatchQueue.main.async {
             self.updateCutout()
         }
     }
     
     private func updateCutout() {
-        // Figure out where the cutout ends up in layer coordinates.
+        textOrientation = CGImagePropertyOrientation.right
+        uiRotationTransform = CGAffineTransform(translationX: 0, y: 1).rotated(by: -CGFloat.pi / 2)
+        
+        let roi = regionOfInterest
+        roiToGlobalTransform = CGAffineTransform(translationX: roi.origin.x, y: roi.origin.y).scaledBy(x: roi.width, y: roi.height)
+        
+        visionToAVFTransform = roiToGlobalTransform.concatenating(bottomToTopTransform).concatenating(uiRotationTransform)
+        
         let roiRectTransform = bottomToTopTransform.concatenating(uiRotationTransform)
         let cutout = previewView.videoPreviewLayer.layerRectConverted(fromMetadataOutputRect: regionOfInterest.applying(roiRectTransform))
         
@@ -125,28 +108,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
         let path = UIBezierPath(rect: cutoutView.frame)
         path.append(UIBezierPath(roundedRect: cutout, cornerRadius: 10))
         maskLayer.path = path.cgPath
-    }
-    
-    private func setupOrientationAndTransform() {
-        let roi = regionOfInterest
-        roiToGlobalTransform = CGAffineTransform(translationX: roi.origin.x, y: roi.origin.y).scaledBy(x: roi.width, y: roi.height)
-        
-        switch currentOrientation {
-        case .landscapeLeft:
-            textOrientation = CGImagePropertyOrientation.up
-            uiRotationTransform = CGAffineTransform.identity
-        case .landscapeRight:
-            textOrientation = CGImagePropertyOrientation.down
-            uiRotationTransform = CGAffineTransform(translationX: 1, y: 1).rotated(by: CGFloat.pi)
-        case .portraitUpsideDown:
-            textOrientation = CGImagePropertyOrientation.left
-            uiRotationTransform = CGAffineTransform(translationX: 1, y: 0).rotated(by: CGFloat.pi / 2)
-        default:
-            textOrientation = CGImagePropertyOrientation.right
-            uiRotationTransform = CGAffineTransform(translationX: 0, y: 1).rotated(by: -CGFloat.pi / 2)
-        }
-        
-        visionToAVFTransform = roiToGlobalTransform.concatenating(bottomToTopTransform).concatenating(uiRotationTransform)
     }
     
     private func setupCamera() {
@@ -196,9 +157,7 @@ class BaseIbanNumberScannerViewController: UIViewController {
         captureSession.startRunning()
     }
     
-    // MARK: - UI drawing and interaction
-    
-    func showString(string: String) {
+    func stopRunning() {
         captureSessionQueue.sync {
             self.captureSession.stopRunning()
         }
@@ -212,19 +171,5 @@ extension BaseIbanNumberScannerViewController: AVCaptureVideoDataOutputSampleBuf
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // This is implemented in VisionViewController.
-    }
-}
-
-// MARK: - Utility extensions
-
-extension AVCaptureVideoOrientation {
-    init?(deviceOrientation: UIDeviceOrientation) {
-        switch deviceOrientation {
-        case .portrait: self = .portrait
-        case .portraitUpsideDown: self = .portraitUpsideDown
-        case .landscapeLeft: self = .landscapeRight
-        case .landscapeRight: self = .landscapeLeft
-        default: return nil
-        }
     }
 }

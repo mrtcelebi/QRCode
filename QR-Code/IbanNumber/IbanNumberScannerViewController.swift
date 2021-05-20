@@ -61,7 +61,7 @@ class IbanNumberScannerViewController: BaseIbanNumberScannerViewController {
         show(boxGroups: [(color: UIColor.red.cgColor, boxes: redBoxes), (color: UIColor.green.cgColor, boxes: greenBoxes)])
         
         if let sureNumber = numberTracker.getStableString() {
-            showString(string: sureNumber)
+            stopRunning()
             numberTracker.reset(string: sureNumber)
             getIbanNumber?(sureNumber)
             DispatchQueue.main.async { [weak self] in
