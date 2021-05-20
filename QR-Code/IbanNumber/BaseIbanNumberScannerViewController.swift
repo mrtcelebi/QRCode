@@ -16,8 +16,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
     private let ibanNumberLabel = UILabel()
     private var maskLayer = CAShapeLayer()
     
-    // Device orientation. Updated whenever the orientation changes to a
-    // different supported orientation.
     private var currentOrientation = UIDeviceOrientation.portrait
     
     // MARK: - Capture related objects
@@ -30,10 +28,7 @@ class BaseIbanNumberScannerViewController: UIViewController {
     private let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutputQueue")
     
     // MARK: - Region of interest (ROI) and text orientation
-    // Region of video data output buffer that recognition should be run on.
-    // Gets recalculated once the bounds of the preview layer are known.
     var regionOfInterest = CGRect(x: 0, y: 0, width: 1, height: 1)
-    // Orientation of text to search for in the region of interest.
     var textOrientation = CGImagePropertyOrientation.up
     
     // MARK: - Coordinate transforms
@@ -56,21 +51,18 @@ class BaseIbanNumberScannerViewController: UIViewController {
         
         captureSessionQueue.async {
             self.setupCamera()
-            // Calculate region of interest now that the camera is setup.
+            
             DispatchQueue.main.async {
-                // Figure out initial ROI.
                 self.calculateRegionOfInterest()
             }
         }
     }
     
     private func configureContents() {
-        // Set up preview view.
         view.addSubview(previewView)
         previewView.edgesToSuperview()
         previewView.session = captureSession
         
-        // Set up cutout view.
         view.addSubview(cutoutView)
         cutoutView.edgesToSuperview()
         cutoutView.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
@@ -95,21 +87,17 @@ class BaseIbanNumberScannerViewController: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        // Only change the current orientation if the new one is landscape or
-        // portrait. You can't really do anything about flat or unknown.
         let deviceOrientation = UIDevice.current.orientation
         if deviceOrientation.isPortrait || deviceOrientation.isLandscape {
             currentOrientation = deviceOrientation
         }
         
-        // Handle device orientation in the preview layer.
         if let videoPreviewLayerConnection = previewView.videoPreviewLayer.connection {
             if let newVideoOrientation = AVCaptureVideoOrientation(deviceOrientation: deviceOrientation) {
                 videoPreviewLayerConnection.videoOrientation = newVideoOrientation
             }
         }
         
-        // Orientation changed: figure out new region of interest (ROI).
         calculateRegionOfInterest()
     }
     
@@ -121,32 +109,23 @@ class BaseIbanNumberScannerViewController: UIViewController {
     // MARK: - Setup
     
     private func calculateRegionOfInterest() {
-        // In landscape orientation the desired ROI is specified as the ratio of
-        // buffer width to height. When the UI is rotated to portrait, keep the
-        // vertical size the same (in buffer pixels). Also try to keep the
-        // horizontal size the same up to a maximum ratio.
         let desiredHeightRatio = 0.15
         let desiredWidthRatio = 0.6
         let maxPortraitWidth = 0.8
         
-        // Figure out size of ROI.
         let size: CGSize
         if currentOrientation.isPortrait || currentOrientation == .unknown {
             size = CGSize(width: min(desiredWidthRatio * bufferAspectRatio, maxPortraitWidth), height: desiredHeightRatio / bufferAspectRatio)
         } else {
             size = CGSize(width: desiredWidthRatio, height: desiredHeightRatio)
         }
-        // Make it centered.
+        
         regionOfInterest.origin = CGPoint(x: (1 - size.width) / 2, y: (1 - size.height) / 2)
         regionOfInterest.size = size
         
-        // ROI changed, update transform.
         setupOrientationAndTransform()
         
-        // Update the cutout to match the new ROI.
         DispatchQueue.main.async {
-            // Wait for the next run cycle before updating the cutout. This
-            // ensures that the preview layer already has its new orientation.
             self.updateCutout()
         }
     }
@@ -168,9 +147,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
     }
     
     private func setupOrientationAndTransform() {
-        // Recalculate the affine transform between Vision coordinates and AVF coordinates.
-        
-        // Compensate for region of interest.
         let roi = regionOfInterest
         roiToGlobalTransform = CGAffineTransform(translationX: roi.origin.x, y: roi.origin.y).scaledBy(x: roi.width, y: roi.height)
         
@@ -184,12 +160,11 @@ class BaseIbanNumberScannerViewController: UIViewController {
         case .portraitUpsideDown:
             textOrientation = CGImagePropertyOrientation.left
             uiRotationTransform = CGAffineTransform(translationX: 1, y: 0).rotated(by: CGFloat.pi / 2)
-        default: // We default everything else to .portraitUp
+        default:
             textOrientation = CGImagePropertyOrientation.right
             uiRotationTransform = CGAffineTransform(translationX: 0, y: 1).rotated(by: -CGFloat.pi / 2)
         }
         
-        // Full Vision ROI to AVF transform.
         visionToAVFTransform = roiToGlobalTransform.concatenating(bottomToTopTransform).concatenating(uiRotationTransform)
     }
     
@@ -200,10 +175,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
         }
         self.captureDevice = captureDevice
         
-        // NOTE:
-        // Requesting 4k buffers allows recognition of smaller text but will
-        // consume more power. Use the smallest buffer size necessary to keep
-        // down battery usage.
         if captureDevice.supportsSessionPreset(.hd4K3840x2160) {
             captureSession.sessionPreset = AVCaptureSession.Preset.hd4K3840x2160
             bufferAspectRatio = 3840.0 / 2160.0
@@ -220,26 +191,17 @@ class BaseIbanNumberScannerViewController: UIViewController {
             captureSession.addInput(deviceInput)
         }
         
-        // Configure video data output.
         videoDataOutput.alwaysDiscardsLateVideoFrames = true
         videoDataOutput.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
         videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
         if captureSession.canAddOutput(videoDataOutput) {
             captureSession.addOutput(videoDataOutput)
-            // NOTE:
-            // There is a trade-off to be made here. Enabling stabilization will
-            // give temporally more stable results and should help the recognizer
-            // converge. But if it's enabled the VideoDataOutput buffers don't
-            // match what's displayed on screen, which makes drawing bounding
-            // boxes very hard. Disable it in this app to allow drawing detected
-            // bounding boxes on screen.
             videoDataOutput.connection(with: AVMediaType.video)?.preferredVideoStabilizationMode = .off
         } else {
             print("Could not add VDO output")
             return
         }
         
-        // Set zoom and autofocus to help focus on very small text.
         do {
             try captureDevice.lockForConfiguration()
             captureDevice.videoZoomFactor = 2
@@ -256,9 +218,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
     // MARK: - UI drawing and interaction
     
     func showString(string: String) {
-        // Found a definite number.
-        // Stop the camera synchronously to ensure that no further buffers are
-        // received. Then update the number view asynchronously.
         captureSessionQueue.sync {
             self.captureSession.stopRunning()
             DispatchQueue.main.async {
