@@ -64,6 +64,9 @@ class IbanNumberScannerViewController: BaseIbanNumberScannerViewController {
             showString(string: sureNumber)
             numberTracker.reset(string: sureNumber)
             getIbanNumber?(sureNumber)
+            DispatchQueue.main.async { [weak self] in
+                self?.dismiss(animated: true, completion: nil)
+            }
         }
     }
     

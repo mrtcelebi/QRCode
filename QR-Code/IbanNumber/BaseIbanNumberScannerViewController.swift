@@ -13,7 +13,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
     // MARK: - UI objects
     let previewView = IbanNumberScannerPreviewView()
     private let cutoutView = UIView()
-    private let ibanNumberLabel = UILabel()
     private var maskLayer = CAShapeLayer()
     
     private var currentOrientation = UIDeviceOrientation.portrait
@@ -69,19 +68,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
         maskLayer.backgroundColor = UIColor.clear.cgColor
         maskLayer.fillRule = .evenOdd
         cutoutView.layer.mask = maskLayer
-        
-        view.addSubview(ibanNumberLabel)
-        ibanNumberLabel.backgroundColor = .white
-        ibanNumberLabel.textColor = .black
-        ibanNumberLabel.textAlignment = .center
-        ibanNumberLabel.isHidden = true
-        
-        addTapGesture()
-    }
-    
-    private func addTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        cutoutView.addGestureRecognizer(tapGesture)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -143,7 +129,6 @@ class BaseIbanNumberScannerViewController: UIViewController {
         // Move the number view down to under cutout.
         var numFrame = cutout
         numFrame.origin.y += numFrame.size.height
-        ibanNumberLabel.frame = numFrame
     }
     
     private func setupOrientationAndTransform() {
@@ -220,23 +205,9 @@ class BaseIbanNumberScannerViewController: UIViewController {
     func showString(string: String) {
         captureSessionQueue.sync {
             self.captureSession.stopRunning()
-            DispatchQueue.main.async {
-                self.ibanNumberLabel.text = string
-                self.ibanNumberLabel.isHidden = false
-            }
         }
     }
     
-    @IBAction private func handleTap(_ sender: UITapGestureRecognizer) {
-        captureSessionQueue.async {
-            if !self.captureSession.isRunning {
-                self.captureSession.startRunning()
-            }
-            DispatchQueue.main.async {
-                self.ibanNumberLabel.isHidden = true
-            }
-        }
-    }
 }
 
 // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
