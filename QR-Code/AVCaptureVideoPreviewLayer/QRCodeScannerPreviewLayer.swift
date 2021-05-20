@@ -8,7 +8,7 @@
 import AVFoundation
 import UIKit
 
-public class ScannerOverlayPreviewLayer: AVCaptureVideoPreviewLayer {
+public class QRCodeScannerPreviewLayer: AVCaptureVideoPreviewLayer {
 
     public var cornerLength: CGFloat = 30
     

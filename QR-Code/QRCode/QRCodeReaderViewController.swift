@@ -29,7 +29,7 @@ class QRCodeScannerViewController: UIViewController {
     }()
     
     private var captureSession: AVCaptureSession!
-    private var previewLayer: ScannerOverlayPreviewLayer!
+    private var previewLayer: QRCodeScannerPreviewLayer!
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -131,7 +131,7 @@ class QRCodeScannerViewController: UIViewController {
             return
         }
         
-        previewLayer = ScannerOverlayPreviewLayer(session: captureSession)
+        previewLayer = QRCodeScannerPreviewLayer(session: captureSession)
         previewLayer.frame = view.layer.bounds
         previewLayer.backgroundColor = UIColor.gray.withAlphaComponent(0.3).cgColor
         previewLayer.maskSize = .init(width: 250, height: 250)
