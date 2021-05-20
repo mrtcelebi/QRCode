@@ -123,12 +123,8 @@ class BaseIbanNumberScannerViewController: UIViewController {
         
         // Create the mask.
         let path = UIBezierPath(rect: cutoutView.frame)
-        path.append(UIBezierPath(rect: cutout))
+        path.append(UIBezierPath(roundedRect: cutout, cornerRadius: 10))
         maskLayer.path = path.cgPath
-        
-        // Move the number view down to under cutout.
-        var numFrame = cutout
-        numFrame.origin.y += numFrame.size.height
     }
     
     private func setupOrientationAndTransform() {
