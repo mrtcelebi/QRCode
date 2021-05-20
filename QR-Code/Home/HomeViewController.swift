@@ -49,14 +49,6 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    private let readIbanNumberFromImageButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Read Iban", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .blue
-        return button
-    }()
-    
     private let scanTextLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -92,18 +84,15 @@ class HomeViewController: UIViewController {
         stackView.addArrangedSubview(scanButton)
         stackView.addArrangedSubview(saveImageButton)
         stackView.addArrangedSubview(scanIbanNumberButton)
-        stackView.addArrangedSubview(readIbanNumberFromImageButton)
         scanButton.height(40)
         saveImageButton.height(40)
         scanIbanNumberButton.height(40)
-        readIbanNumberFromImageButton.height(40)
         
         scanButton.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
         saveImageButton.addTarget(self, action: #selector(saveImageButtonTapped), for: .touchUpInside)
         if #available(iOS 13.0, *) {
             scanIbanNumberButton.addTarget(self, action: #selector(scanIbanNumberButtonTapped), for: .touchUpInside)
         }
-        readIbanNumberFromImageButton.addTarget(self, action: #selector(readIbanNumberFromImageButtonTapped), for: .touchUpInside)
     }
 
     @IBAction private func scanButtonTapped() {
@@ -146,14 +135,7 @@ class HomeViewController: UIViewController {
     @IBAction private func imageViewTapped() {
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = true
         present(imagePicker, animated: true, completion: nil)
-    }
-    
-    @IBAction private func readIbanNumberFromImageButtonTapped() {
-        if #available(iOS 13.0, *) {
-            scanTextLabel.text = IbanNumberReader.shared.recognizeNumberFrom(image: imageView.image!)
-        }
     }
     
     
@@ -182,13 +164,27 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        if let image = info[.originalImage] as? UIImage {
-            imageView.image = image
-        } else if let editedImage = info[.editedImage] as? UIImage {
-            imageView.image = editedImage
+        let originalImage: UIImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        
+        guard let cgImage = originalImage.cgImage else {
+            dismiss(animated: true, completion: nil)
+            return
         }
-        dismiss(animated: true, completion: nil)
+        
+        if #available(iOS 13.0, *) {
+            IbanNumberReader.shared.performVisionRequest(image: cgImage, orientation: .up, handleIbanNumber: { [weak self] ibanNumber in
+                DispatchQueue.main.async {
+                    self?.scanTextLabel.text = ibanNumber
+                }
+            })
+        }
+        
+        self.dismiss(animated: true, completion: nil)
     }
 }
