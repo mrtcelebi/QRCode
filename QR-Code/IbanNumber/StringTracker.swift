@@ -12,8 +12,6 @@ class StringTracker {
 
     typealias StringObservation = (lastSeen: Int64, count: Int64)
     
-    // Dictionary of seen strings. Used to get stable recognition before
-    // displaying anything.
     var seenStrings = [String: StringObservation]()
     var bestCount = Int64(0)
     var bestString = ""
@@ -71,15 +69,7 @@ class StringTracker {
 
 // MARK: - Character Extension
 extension Character {
-	// Given a list of allowed characters, try to convert self to those in list
-	// if not already in it. This handles some common misclassifications for
-	// characters that are visually similar and can only be correctly recognized
-	// with more context and/or domain knowledge. Some examples (should be read
-	// in Menlo or some other font that has different symbols for all characters):
-	// 1 and l are the same character in Times New Roman
-	// I and l are the same character in Helvetica
-	// 0 and O are extremely similar in many fonts
-	// oO, wW, cC, sS, pP and others only differ by size in many fonts
+    
 	func getSimilarCharacterIfNotIn(allowedChars: String) -> Character {
 		let conversionTable = [
 			"s": "S",
@@ -115,84 +105,11 @@ extension Character {
 
 // MARK: - String Extension
 extension String {
-	// Extracts the first Turkey Iban number found in the string, returning
-	// the range of the number and the number itself as a tuple.
-	// Returns nil if no number is found.
-	func extractIbanNumber() -> (Range<String.Index>, String)? {
-		// Do a first pass to find any substring that could be a Turkey Iban
-		// number. This will match the following common patterns and more:
-		// TRxx-xxxx-xxxx-xxxx-xxxx-xxxx-xx
-		// TRxxxxxxxxxxxxxxxxxxxxxxxx
-		// TRxx xxxx xxxx xxxx xxxx xxxx xx
-		// xx-xxxx-xxxx-xxxx-xxxx-xxxx-xx
-		// xxxxxxxxxxxxxxxxxxxxxxxx
-		// xx xxxx xxxx xxxx xxxx xxxx xx
-		// Note that this doesn't only look for digits since some digits look
-		// very similar to letters. This is handled later.
-        let pattern = #"""
-            (?x)					# Verbose regex, allows comments
-            \b(?:\TR?)?		    	# Potential international prefix, may have -
-            (\w{2})				    # Capture xx
-            [\ -./]?				# Potential separator
-            (\w{4})					# Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?                # Potential separator
-            (\w{4})                 # Capture xxxx
-            [\ -./]?				# Potential separator
-            (\w{2})\b				# Capture xx
-            """#
-        
-		guard let range = self.range(of: pattern, options: .regularExpression, range: nil, locale: nil) else {
-			// No phone number found.
-			return nil
-		}
-		
-		// Potential number found. Strip out punctuation, whitespace and country
-		// prefix.
-		var phoneNumberDigits = ""
-		let substring = String(self[range])
-		let nsrange = NSRange(substring.startIndex..., in: substring)
-		do {
-			// Extract the characters from the substring.
-			let regex = try NSRegularExpression(pattern: pattern, options: [])
-			if let match = regex.firstMatch(in: substring, options: [], range: nsrange) {
-				for rangeInd in 1 ..< match.numberOfRanges {
-					let range = match.range(at: rangeInd)
-					let matchString = (substring as NSString).substring(with: range)
-					phoneNumberDigits += matchString as String
-				}
-			}
-		} catch {
-			print("Error \(error) when creating pattern")
-		}
-		
-		// Must be exactly 24 digits.
-		guard phoneNumberDigits.count == 24 else {
-			return nil
-		}
-		
-		var result = ""
-		let allowedChars = "0123456789"
-		for var char in phoneNumberDigits {
-			char = char.getSimilarCharacterIfNotIn(allowedChars: allowedChars)
-			guard allowedChars.contains(char) else {
-				return nil
-			}
-			result.append(char)
-		}
-		return (range, result)
-	}
     
-    // Validate IbanNumber
-    func isValidIbanNumber() -> Bool {
-        let pattern = #"""
+    var pattern: String {
+            #"""
             (?x)                    # Verbose regex, allows comments
-            \b(?:\TR?)?             # Potential international prefix, may have
+            \b(?:\TR?)?             # Potential international prefix, may have -
             (\w{2})                 # Capture xx
             [\ -./]?                # Potential separator
             (\w{4})                 # Capture xxxx
@@ -207,6 +124,53 @@ extension String {
             [\ -./]?                # Potential separator
             (\w{2})\b               # Capture xx
             """#
+    }
+    
+	func extractIbanNumber() -> (Range<String.Index>, String)? {
+        
+		guard let range = self.range(of: pattern, options: .regularExpression, range: nil, locale: nil) else {
+			// No phone number found.
+			return nil
+		}
+		
+		// Potential number found. Strip out punctuation, whitespace and country
+		// prefix.
+		var ibanNumberDigits = ""
+		let substring = String(self[range])
+		let nsrange = NSRange(substring.startIndex..., in: substring)
+		do {
+			// Extract the characters from the substring.
+			let regex = try NSRegularExpression(pattern: pattern, options: [])
+			if let match = regex.firstMatch(in: substring, options: [], range: nsrange) {
+				for rangeInd in 1 ..< match.numberOfRanges {
+					let range = match.range(at: rangeInd)
+					let matchString = (substring as NSString).substring(with: range)
+					ibanNumberDigits += matchString as String
+				}
+			}
+		} catch {
+			print("Error \(error) when creating pattern")
+		}
+		
+		// Must be exactly 24 digits.
+		guard ibanNumberDigits.count == 24 else {
+			return nil
+		}
+		
+		var result = ""
+		let allowedChars = "0123456789"
+		for var char in ibanNumberDigits {
+			char = char.getSimilarCharacterIfNotIn(allowedChars: allowedChars)
+			guard allowedChars.contains(char) else {
+				return nil
+			}
+			result.append(char)
+		}
+		return (range, result)
+	}
+    
+    // Validate IbanNumber
+    func isValidIbanNumber() -> Bool {
         
         let regex = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil

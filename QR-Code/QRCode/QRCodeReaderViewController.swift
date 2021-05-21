@@ -29,7 +29,8 @@ class QRCodeScannerViewController: UIViewController {
     }()
     
     private var captureSession: AVCaptureSession!
-    private var previewLayer: ScannerOverlayPreviewLayer!
+    private var previewLayer: QRCodeScannerPreviewLayer!
+    var getQrCodeString: ((String) -> Void)?
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -131,7 +132,7 @@ class QRCodeScannerViewController: UIViewController {
             return
         }
         
-        previewLayer = ScannerOverlayPreviewLayer(session: captureSession)
+        previewLayer = QRCodeScannerPreviewLayer(session: captureSession)
         previewLayer.frame = view.layer.bounds
         previewLayer.backgroundColor = UIColor.gray.withAlphaComponent(0.3).cgColor
         previewLayer.maskSize = .init(width: 250, height: 250)
@@ -235,17 +236,18 @@ extension QRCodeScannerViewController: UIImagePickerControllerDelegate, UINaviga
         if let qrcodeImage = info[.originalImage] as? UIImage {
             if let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]) {
                 let ciImage = CIImage(image: qrcodeImage)!
-                var qrCodeLink = ""
+                var qrCodeString = ""
                 
                 let features = detector.features(in: ciImage)
                 for feature in features as! [CIQRCodeFeature] {
-                    qrCodeLink += feature.messageString!
+                    qrCodeString += feature.messageString!
                 }
                 
-                if qrCodeLink == "" {
+                if qrCodeString == "" {
                     print("Qr didnt find")
                 } else {
-                    print("message: \(qrCodeLink)")
+                    print("message: \(qrCodeString)")
+                    getQrCodeString?(qrCodeString)
                 }
             }
         } else {
