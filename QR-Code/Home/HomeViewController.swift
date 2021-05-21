@@ -103,6 +103,12 @@ class HomeViewController: UIViewController {
                 self?.scanTextLabel.text = string
             }
         }
+        viewController.getQrCodeString = { [weak self] qrCodeString in
+            DispatchQueue.main.async {
+                self?.scanTextLabel.text = qrCodeString
+            }
+            self?.dismiss(animated: true)
+        }
     }
     
     @IBAction private func saveImageButtonTapped() {
